@@ -31,7 +31,11 @@ export class TypeormNeighborRepository implements NeighborRepository {
     }
 
     async getNeighbors(): Promise<Neighbor[] | null> {
-        const neighbors = await this.repository.find()
+        const neighbors = await this.repository.find({
+            relations: {
+                streets: true
+            }
+        })
 
         if (!neighbors) {
             return null

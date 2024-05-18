@@ -5,12 +5,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { InputForm } from "@/components/InputForm";
+import { makeCreateStreetUseCase } from "@/modules/Street/factories/make-create-street-use-case";
 
 type StreetType = {
-  street: string;
+  streetName: string;
 };
 const schemaArea = yup.object({
-  street: yup.string().required("Campo obrigatório"),
+  streetName: yup.string().required("Campo obrigatório"),
 });
 export default function RegisterStreet() {
   const {
@@ -20,9 +21,18 @@ export default function RegisterStreet() {
   } = useForm({
     resolver: yupResolver(schemaArea),
   });
-  const { area } = useLocalSearchParams();
-  function handleStreet({ street }: StreetType) {
-    router.navigate(`Register/Street/${street}`);
+  const { area, neighborId } = useLocalSearchParams();
+
+  async function handleStreet({ streetName }: StreetType) {
+    
+    const createStreetUseCase = makeCreateStreetUseCase()
+
+    const { street } = await createStreetUseCase.execute({
+      name: streetName,
+      neighborId: neighborId as string
+    })
+
+    router.navigate(`Register/Street/${street.id}`);
   }
 
   return (
@@ -30,10 +40,10 @@ export default function RegisterStreet() {
       <Text className="text-2xl">Área {area}</Text>
       <InputForm
         control={control}
-        errorMessage={errors.street?.message}
+        errorMessage={errors.streetName?.message}
         isLabel
         title="Rua"
-        name="street"
+        name="streetName"
       />
       <View className="flex-row gap-4 justify-between mt-10">
         <Link asChild href={"/"}>

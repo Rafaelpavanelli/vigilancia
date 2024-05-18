@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Visitation } from './visitation';
 
 @Entity('visit_control_measures')
@@ -10,6 +10,7 @@ export class VisitControlMeasure {
   controlMeasure!: string;
 
   @ManyToOne(() => Visitation, visitation => visitation.controlMeasures)
+  @JoinColumn({name: 'visitation_id', referencedColumnName: 'id'})
   visitation!: Visitation;
 
   @Column({ name: 'visitation_id' })
