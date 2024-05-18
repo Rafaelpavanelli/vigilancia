@@ -52,10 +52,12 @@ function RootLayoutNav() {
   return (
     <GluestackUIProvider>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(Register)/index" options={{
-          headerShown:false,
-          }} />
+        <Stack.Screen
+          name="(Pages)"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     </GluestackUIProvider>
   );

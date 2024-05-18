@@ -1,54 +1,84 @@
-import { makeGetHousesByStreetIdUseCase } from "@/modules/House/factories/make-get-houses-by-street-id-use-case";
-import { House } from "@/modules/House/typeorm/entities/house";
-import { makeCreateVisitationUseCase } from "@/modules/Visitation/factories/make-create-visitation-use-case";
-import { Button, Center } from "@gluestack-ui/themed";
-import { Link } from "expo-router";
-import { useState } from "react";
-import { Text } from "react-native";
-
-export default function Home(){
-
-    const [houses, setHouses] = useState<House[] | null>(null)
-
-    async function getHousesByStreetId() {
-        const getHousesByStreeId = makeGetHousesByStreetIdUseCase()
-
-        const { houses } = await getHousesByStreeId.execute("4ff37a51-9411-4cf8-a827-558576afa7dc")
-
-        setHouses(houses)
-        console.log(houses)
-    }
-
-    async function visitation() {
-        const useCase = makeCreateVisitationUseCase()
-
-        const { visitation } = await useCase.execute({
-            houseId: "8a321f58-06d1-45ae-9257-d5d350dc7115",
-            status: 'fechado'
-        })
-
-        console.log(visitation)
-    }
-
-    return(
-        <Center className="relative flex-1 pt-10 gap-10">
-            <Link href={'(Register)'}>Registrar</Link>
-
-            {houses && houses.map(house => {
-                return (
-                    <>
-                        <Text>{house.houseNumber}</Text>
-                        {house.visits && house.visits.map(visit => {
-                            return (
-                                <Text>Rua: {visit.status}</Text>
-                            )
-                        })}
-                    </>
-                )
-            })}
-
-            <Button onPress={async () => await getHousesByStreetId()}><Text>Ver Casas</Text></Button>
-            <Button onPress={async () => await visitation()}><Text>Visitar</Text></Button>
-        </Center>
-    )
-}
+import {
+    Accordion,
+    AccordionContent,
+    AccordionHeader,
+    AccordionItem,
+    AccordionTitleText,
+    AccordionTrigger,
+  } from "@gluestack-ui/themed";
+  import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+  
+  import {
+    FlatList,
+    Text,
+    View,
+  } from "react-native";
+  import { Link } from "expo-router";
+  import { data } from "@/utils/FakeData";
+  export default function RegisterNeighborhood() {
+   
+    return (
+      <View className="flex-1 flex-col px-4 pt-10 gap-8 items-center">
+        <Text className="text-2xl ">Áreas</Text>
+        <FlatList
+          className="w-full "
+          data={data}
+          renderItem={(item) => (
+            <Accordion
+              m="$5"
+              width="100%"
+              size="lg"
+              variant="filled"
+              type="single"
+              isCollapsible={true}
+              isDisabled={false}
+            >
+              <AccordionItem value={String(item.item.area)}>
+                <AccordionHeader>
+                  <AccordionTrigger>
+                    {({ isExpanded }) => {
+                      return (
+                        <View className="flex-row justify-between border-b-[1px] items-center px-2">
+                          <AccordionTitleText className="text-2xl py-4">
+                            Área {item.item.area}
+                          </AccordionTitleText>
+                          <View className="flex-row justify-center items-center">
+                        <Link href={`Register/Area/${item.item.area}`}>Cadastrar</Link>
+                          {isExpanded ? (
+                            <MaterialIcons
+                              name="keyboard-arrow-up"
+                              size={24}
+                              color="black"
+                            />
+                          ) : (
+                            <MaterialIcons
+                              name="keyboard-arrow-down"
+                              size={24}
+                              color="black"
+                            />
+                          )}
+                          </View>
+                        </View>
+                      );
+                    }}
+                  </AccordionTrigger>
+                </AccordionHeader>
+                <AccordionContent className="mx-2">
+                  {item.item.streets.map((street, index) => (
+                    <Link
+                      href={`streets/${street.id}`}
+                      className="mt-4  border-b-[1px] border-gray-700 py-2 text-gray-600"
+                      key={index}
+                    >
+                      {street.name}
+                    </Link>
+                  ))}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
+        />
+      </View>
+    );
+  }
+  
