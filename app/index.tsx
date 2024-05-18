@@ -7,63 +7,43 @@ import {
   AccordionTrigger,
 } from "@gluestack-ui/themed";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-  
-  import {
-  FlatList,
-  Text,
-  View,
-} from "react-native";
-import { Link } from "expo-router";
-import { useEffect, useState } from "react";
-import { Neighbor } from "@/modules/Neighbor/typeorm/entities/neighbor";
-import { makeGetNeighborsUseCase } from "@/modules/Neighbor/factories/make-create-get-neighbor-use-case";
-  export default function RegisterNeighborhood() {
-   
-    const [neighbors, setNeighbors] = useState<Neighbor[] | null>(null)
 
-    async function fetchNeighbors() {
-      const getNeighborsUseCase = makeGetNeighborsUseCase()
-
-      try {
-        const { neighbors } = await getNeighborsUseCase.execute()
-
-        setNeighbors(neighbors)
-      } catch (e) {
-        console.log(e)
-      }
-    }
-
-    useEffect(() => {
-      fetchNeighbors()
-    }, [])
-
-    return (
-      <View className="flex-1 flex-col px-4 pt-10 gap-8 items-center">
-        <Text className="text-2xl ">Áreas</Text>
-        <FlatList
-          className="w-full "
-          data={neighbors}
-          renderItem={(item) => (
-            <Accordion
-              m="$5"
-              width="100%"
-              size="lg"
-              variant="filled"
-              type="single"
-              isCollapsible={true}
-              isDisabled={false}
-            >
-              <AccordionItem value={String(item.item.neighborNumber)}>
-                <AccordionHeader>
-                  <AccordionTrigger>
-                    {({ isExpanded }) => {
-                      return (
-                        <View className="flex-row justify-between border-b-[1px] items-center px-2">
-                          <AccordionTitleText className="text-2xl py-4">
-                            Área {item.item.neighborNumber}
-                          </AccordionTitleText>
-                          <View className="flex-row justify-center items-center">
-                        <Link href={`Register/Area/${item.item.neighborNumber}`}>Cadastrar</Link>
+import { FlatList, Text, View, Button, Pressable } from "react-native";
+import { Link, useRouter } from "expo-router";
+import { data } from "@/utils/FakeData";
+export default function RegisterNeighborhood() {
+  const router = useRouter();
+  return (
+    <View className="flex-1 flex-col px-4 pt-10 gap-8 items-center relative">
+      <Text className="text-2xl ">Áreas</Text>
+      <FlatList
+        className="w-full "
+        data={data}
+        ListEmptyComponent={() => <Link href={""}></Link>}
+        renderItem={(item) => (
+          <Accordion
+          //@ts-ignore
+            m="$5"
+            width="100%"
+            size="lg"
+            variant="filled"
+            type="single"
+            isCollapsible={true}
+            isDisabled={false}
+          >
+            <AccordionItem value={String(item.item.area)}>
+              <AccordionHeader>
+                <AccordionTrigger>
+                  {({ isExpanded }) => {
+                    return (
+                      <View className="flex-row justify-between border-b-[1px] items-center px-2">
+                        <AccordionTitleText className="text-2xl py-4">
+                          Área {item.item.area}
+                        </AccordionTitleText>
+                        <View className="flex-row justify-center items-center">
+                          <Link href={`Register/Area/${item.item.area}`}>
+                            Cadastrar
+                          </Link>
                           {isExpanded ? (
                             <MaterialIcons
                               name="keyboard-arrow-up"
@@ -77,28 +57,43 @@ import { makeGetNeighborsUseCase } from "@/modules/Neighbor/factories/make-creat
                               color="black"
                             />
                           )}
-                          </View>
                         </View>
-                      );
-                    }}
-                  </AccordionTrigger>
-                </AccordionHeader>
-                <AccordionContent className="mx-2">
-                  {item.item.streets.map((street, index) => (
-                    <Link
-                      href={`streets/${street.id}`}
-                      className="mt-4  border-b-[1px] border-gray-700 py-2 text-gray-600"
-                      key={index}
-                    >
-                      {street.streetName}
-                    </Link>
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          )}
-        />
-      </View>
-    );
-  }
-  
+                      </View>
+                    );
+                  }}
+                </AccordionTrigger>
+              </AccordionHeader>
+              <AccordionContent className="mx-2">
+                {item.item.streets.map((street, index) => (
+                  <Link
+                    href={`streets/${street.id}`}
+                    className="mt-4  border-b-[1px] border-gray-700 py-2 text-gray-600"
+                    key={index}
+                  >
+                    {street.name}
+                  </Link>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
+      />
+      <Pressable
+        onPress={() => router.push("(Pages)/registerArea")}
+        style={{
+          width: 60,
+          backgroundColor: "#00fdf1",
+          height: 60,
+          borderRadius: 100,
+          justifyContent: "center",
+          alignItems: "center",
+          position: 'absolute',
+          bottom: 12,
+          right: 12
+        }}
+      >
+        <Text className="text-2xl">+</Text>
+      </Pressable>
+    </View>
+  );
+}

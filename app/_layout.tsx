@@ -3,12 +3,13 @@ import 'reflect-metadata';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import "@/styles/global.css";
 import { initializeOrm } from '@/utils/initialize-orm';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -37,7 +38,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      initializeOrm()
+      initializeOrm();
     }
   }, [loaded]);
 
@@ -51,20 +52,18 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <GluestackUIProvider>
-      <Stack>
-        <Stack.Screen
-          name="(Pages)"
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="index"
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack>
+      <Tabs screenOptions={{ tabBarActiveTintColor: "green",tabBarInactiveTintColor: 'gray'}} >
+      <Tabs.Screen
+        name="index"
+        options={{ title: "Áreas", headerShown: false,tabBarIcon:(color)=><Ionicons name="home-outline" size={24} color={color.color} />}}
+      />
+      
+      <Tabs.Screen
+        name="(Pages)"
+        options={{headerShown: false,href: null}} 
+      />
+     
+    </Tabs>
     </GluestackUIProvider>
   );
 }

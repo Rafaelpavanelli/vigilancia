@@ -15,9 +15,12 @@ import {
 } from "react-native";
 import { Link } from "expo-router";
 import { data } from "@/utils/FakeData";
+import { SafeAreaView } from "react-native-safe-area-context";
 export default function RegisterNeighborhood() {
  
   return (
+    <SafeAreaView>
+
     <View className="flex-1 flex-col px-4 pt-10 gap-8 items-center">
       <Text className="text-2xl ">Áreas</Text>
       <FlatList
@@ -25,6 +28,7 @@ export default function RegisterNeighborhood() {
         data={data}
         renderItem={(item) => (
           <Accordion
+          //@ts-ignore
             m="$5"
             width="100%"
             size="lg"
@@ -79,5 +83,7 @@ export default function RegisterNeighborhood() {
         )}
       />
     </View>
+    </SafeAreaView>
+
   );
 }
