@@ -1,5 +1,5 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {  GluestackUIProvider } from "@gluestack-ui/themed";
+import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { config } from "@gluestack-ui/config";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -48,10 +48,12 @@ function RootLayoutNav() {
   return (
     <GluestackUIProvider>
       <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(Register)/index" options={{
-          headerShown:false,
-          }} />
+        <Stack.Screen
+          name="(Pages)"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
     </GluestackUIProvider>
   );
