@@ -1,12 +1,16 @@
+import 'reflect-metadata';
+
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { config } from "@gluestack-ui/config";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import "@/styles/global.css";
+import { AppDataSource } from '@/ormconfig';
+import { initializeOrm } from '@/utils/initialize-orm';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -35,12 +39,14 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+      initializeOrm()
     }
   }, [loaded]);
 
   if (!loaded) {
     return null;
   }
+
 
   return <RootLayoutNav />;
 }
