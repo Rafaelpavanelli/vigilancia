@@ -1,16 +1,13 @@
+import { CreateNeighborDTO } from "../DTOs/create-neighbor-DTO";
 import { AlreadyExistsNeighbor } from "../errors/neighbor-already-exists";
 import { NeighborRepository } from "../repositories/neighbor-repository";
-
-interface CreateNeighborUseCaseRequest {
-    neighborNumber: number
-}
 
 export class CreateNeighborUseCase {
     constructor(
         private neighborRepository: NeighborRepository
     ){}
 
-    async execute({neighborNumber}: CreateNeighborUseCaseRequest) {
+    async execute({ neighborNumber }: CreateNeighborDTO) {
 
         const alreadyExistsNeighbor = await this.neighborRepository.findByNeighborNumber(neighborNumber)
 
