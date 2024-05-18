@@ -43,7 +43,7 @@ import {
                             Área {item.item.area}
                           </AccordionTitleText>
                           <View className="flex-row justify-center items-center">
-                        <Link href={`Register/Area/${item.item.area}`}>Cadastrar</Link>
+                        <Link href={`Register/Area/${item.item.area}`} >Cadastrar</Link>
                           {isExpanded ? (
                             <MaterialIcons
                               name="keyboard-arrow-up"
