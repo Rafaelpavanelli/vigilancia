@@ -24,9 +24,13 @@ import { makeGetNeighborsUseCase } from "@/modules/Neighbor/factories/make-creat
     async function fetchNeighbors() {
       const getNeighborsUseCase = makeGetNeighborsUseCase()
 
-      const { neighbors } = await getNeighborsUseCase.execute()
+      try {
+        const { neighbors } = await getNeighborsUseCase.execute()
 
-      setNeighbors(neighbors)
+        setNeighbors(neighbors)
+      } catch (e) {
+        console.log(e)
+      }
     }
 
     useEffect(() => {
