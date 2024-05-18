@@ -1,15 +1,11 @@
 import { NeighborRepository } from "@/modules/Neighbor/repositories/neighbor-repository";
 import { StreetRepository } from "../repositories/street-repository";
-
-interface CreateStreetUseCaseRequest {
-    name: string
-    neighborId: string
-}
+import { CreateStreetDTO } from "../DTOs/street-DTO";
 
 export class CreateStreetUseCase {
     constructor(private neighborRepository: NeighborRepository, private streetRepository: StreetRepository){}
 
-    async execute({ name,neighborId }: CreateStreetUseCaseRequest ){
+    async execute({ name,neighborId }: CreateStreetDTO ){
         const hasNeighborWithId = await this.neighborRepository.findById(neighborId)
 
         if(!hasNeighborWithId) {

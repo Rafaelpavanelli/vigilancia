@@ -10,7 +10,7 @@ export class Neighbor {
   @Column({ name: 'neighbor_number' })
   neighborNumber!: number;
 
-  @OneToMany(() => Street, street => street.neighbor)
+  @OneToMany(() => Street, (street) => street.neighbor)
   streets!: Street[];
 
   @CreateDateColumn()

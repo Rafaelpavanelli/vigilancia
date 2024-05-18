@@ -1,4 +1,4 @@
-import { Entity, Column, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn, JoinColumn } from 'typeorm';
 import { Neighbor } from '../../../Neighbor/typeorm/entities/neighbor';
 import { House } from '@/modules/House/typeorm/entities/house';
 import uuid from 'react-native-uuid'
@@ -14,7 +14,8 @@ export class Street {
   @OneToMany(() => House, house => house.street)
   houses!: House[];
 
-  @ManyToOne(() => Neighbor, neighbor => neighbor.streets)
+  @ManyToOne(() => Neighbor, (neighbor) => neighbor.streets)
+  @JoinColumn({name: 'neighbor_id', referencedColumnName: 'id'})
   neighbor!: Neighbor;
 
   @Column({ name: 'neighbor_id' })
