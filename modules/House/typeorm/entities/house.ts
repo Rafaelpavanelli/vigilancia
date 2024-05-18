@@ -1,10 +1,11 @@
 import { Street } from '@/modules/Street/typeorm/entities/street';
 import { Visitation } from '@/modules/Visitation/typeorm/entities/visitation';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, CreateDateColumn, UpdateDateColumn, PrimaryColumn, JoinColumn } from 'typeorm';
+import uuid from 'react-native-uuid'
 
 @Entity('houses')
 export class House {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id!: string;
 
   @Column({ name: 'house_number' })
@@ -14,6 +15,7 @@ export class House {
   addressComplement!: string;
 
   @ManyToOne(() => Street, street => street.houses)
+  @JoinColumn({name: 'street_id', referencedColumnName: 'id'})
   street!: Street;
 
   @Column({ name: 'street_id' })
@@ -27,4 +29,10 @@ export class House {
 
   @OneToMany(() => Visitation, visitation => visitation.house)
   visits!: Visitation[];
+
+  constructor() {
+    if(!this.id) {
+      this.id = uuid.v4() as string
+    }
+  }
 }

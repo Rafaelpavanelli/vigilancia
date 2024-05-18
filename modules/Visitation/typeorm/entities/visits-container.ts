@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, BaseEntity, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, BaseEntity, UpdateDateColumn, JoinColumn } from 'typeorm';
 import { Visitation } from './visitation';
 
 @Entity('visit_containers')
@@ -16,6 +16,7 @@ export class VisitContainer {
   withLarvae!: number;
 
   @ManyToOne(() => Visitation, visitation => visitation.containers)
+  @JoinColumn({name: 'visitation_id', referencedColumnName: 'id'})
   visitation!: Visitation;
 
   @Column({ name: 'visitation_id' })
