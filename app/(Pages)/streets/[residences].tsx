@@ -9,16 +9,8 @@ interface NumberData {
   numero: number;
 }
 
-interface StreetData {
-  id: string;
-  name: string;
-  numbers: NumberData[];
-}
 
-interface AreaData {
-  area: number;
-  streets: StreetData[];
-}
+
 
 export default function Residences() {
   const { residences } = useLocalSearchParams();
@@ -54,7 +46,7 @@ export default function Residences() {
            </View>
         </ScrollView>
         <View className="absolute bottom-4 right-4 h-20 w-20 justify-center items-center rounded-full bg-green-300 z-10">
-          <Pressable onPress={() => console.log(residences)}>
+        <Pressable onPress={() => console.log("Issae")}>
             <Text className="text-2xl text-white">+</Text>
           </Pressable>
         </View>
