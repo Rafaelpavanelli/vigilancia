@@ -8,7 +8,7 @@ import {
 } from "@gluestack-ui/themed";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-import { FlatList, Text, View, Button, Pressable } from "react-native";
+import { FlatList, Text, View,  Pressable } from "react-native";
 import { Link, useRouter } from "expo-router";
 import { data } from "@/utils/FakeData";
 export default function RegisterNeighborhood() {
@@ -19,7 +19,8 @@ export default function RegisterNeighborhood() {
       <FlatList
         className="w-full "
         data={data}
-        ListEmptyComponent={() => <Link href={""}></Link>}
+        
+        ListEmptyComponent={() => <View className="justify-between items-center w-full h-96"><Text className="text-center text-3xl">Sem Áreas Cadastradas</Text><Link className="text-2xl p-4 border-2 border-gray-400 rounded-xl text-center" href={'(Pages)/registerArea'}>Cadastrar Área</Link></View>}
         renderItem={(item) => (
           <Accordion
           //@ts-ignore
