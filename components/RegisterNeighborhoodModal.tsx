@@ -2,12 +2,10 @@ import {
   Button,
   ButtonText,
   Center,
-  Heading,
-  Icon,
-  Modal,
+  Heading, Modal,
   ModalBackdrop,
   ModalCloseButton,
-  ModalHeader,
+  ModalHeader
 } from "@gluestack-ui/themed";
 import { useRef, useState } from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -16,7 +14,7 @@ export function RegisterNeighborhoodModal() {
   const [showModal, setShowModal] = useState(false);
   const ref = useRef(null);
   return (
-    <Center h={300}>
+    <Center height={300}>
       <Button onPress={() => setShowModal(true)} ref={ref}>
         <ButtonText>Cadastrar Bairro</ButtonText>
       </Button>

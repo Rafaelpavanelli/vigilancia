@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, OneToMany, CreateDateColumn, PrimaryColumn, BeforeInsert, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, CreateDateColumn, PrimaryColumn, JoinColumn } from 'typeorm';
 import uuid from 'react-native-uuid'
 
 import { VisitControlMeasure } from './visit-control-measure';
