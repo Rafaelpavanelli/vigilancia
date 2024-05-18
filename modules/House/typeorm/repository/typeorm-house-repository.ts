@@ -26,9 +26,14 @@ export class TypeormHouseRepository implements HouseRepository {
     }
 
     async findById(id: string): Promise<House | null> {
-        const house = await this.repository.findOneBy({
-            id,
-        })
+        const house = await this.repository.findOne({
+            where: {
+                id,
+            },
+            relations: {
+                visits: true
+            },
+        },)
         
         if(!house) {
             return null
@@ -38,8 +43,13 @@ export class TypeormHouseRepository implements HouseRepository {
     }
 
     async getHousesByStreetId(streetId: string): Promise<House[] | null> {
-        const houses = await this.repository.findBy({
-            streetId
+        const houses = await this.repository.find({
+            where: {
+                streetId,
+            },
+            relations: {
+                visits: true
+            }
         })
 
         if(!houses) {
