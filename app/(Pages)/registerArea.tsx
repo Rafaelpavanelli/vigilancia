@@ -21,11 +21,12 @@ export default function RegisterArea(){
       });
       const router = useRouter();
 
-      async function createNeighbor() {
+      async function createNeighbor({area}:AreaType) {
+       
         const createNeighborUseCase = makeCreateNeighborUseCase()
 
         await createNeighborUseCase.execute({
-          neighborNumber: 82
+          neighborNumber: Number(area)
         })
 
         router.back()
@@ -41,7 +42,7 @@ export default function RegisterArea(){
         <Pressable onPress={()=>router.back()} className="w-32 h-14 justify-center items-center  my-2 rounded-xl bg-red-200">
             <Text>Cancelar</Text>
         </Pressable>
-        <Pressable onPress={async () => await createNeighbor()} className="w-32 h-14 justify-center items-center  my-2 rounded-xl bg-teal-500">
+        <Pressable onPress={handleSubmit(createNeighbor)} className="w-32 h-14 justify-center items-center  my-2 rounded-xl bg-teal-500">
             <Text className="text-white">Cadastrar</Text>
         </Pressable>
         </View>

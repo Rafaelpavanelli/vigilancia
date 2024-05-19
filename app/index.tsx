@@ -11,7 +11,6 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import { FlatList, Text, View,  Pressable } from "react-native";
 
-import { FlatList, Text, View, Button, Pressable } from "react-native";
 import { Link, useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { Neighbor } from "@/modules/Neighbor/typeorm/entities/neighbor";
