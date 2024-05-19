@@ -39,7 +39,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded) {
-      initializeOrm();
+      SplashScreen.hideAsync();
     }
   }, [loaded]);
 
