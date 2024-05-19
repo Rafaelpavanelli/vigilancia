@@ -9,16 +9,48 @@ import {
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import { FlatList, Text, View, Button, Pressable } from "react-native";
-import { Link, useRouter } from "expo-router";
-import { data } from "@/utils/FakeData";
+import { Link, useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { Neighbor } from "@/modules/Neighbor/typeorm/entities/neighbor";
+import { makeGetNeighborsUseCase } from "@/modules/Neighbor/factories/make-create-get-neighbor-use-case";
+import { AppDataSource } from "@/ormconfig";
 export default function RegisterNeighborhood() {
+  const [neighbors, setNeighbors] = useState<Neighbor[] | null>(null)
+
   const router = useRouter();
+
+  const fetchNeighbors = useCallback(async () => {
+    if (!AppDataSource.isInitialized) {
+      try {
+        await AppDataSource.initialize();
+      } catch (initializationError) {
+        console.error('Erro ao inicializar dataSource', initializationError);
+        return;
+      }
+    }
+
+    const getNeighborsUseCase = makeGetNeighborsUseCase();
+
+    try {
+      const { neighbors } = await getNeighborsUseCase.execute();
+      setNeighbors(neighbors);
+    } catch (e) {
+      console.error('Erro ao buscar os bairros', e);
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchNeighbors();
+    }, [fetchNeighbors])
+  );
+
   return (
     <View className="flex-1 flex-col px-4 pt-10 gap-8 items-center relative">
       <Text className="text-2xl ">Áreas</Text>
       <FlatList
         className="w-full "
-        data={data}
+        data={neighbors}
         ListEmptyComponent={() => <Link href={""}></Link>}
         renderItem={(item) => (
           <Accordion
@@ -31,17 +63,20 @@ export default function RegisterNeighborhood() {
             isCollapsible={true}
             isDisabled={false}
           >
-            <AccordionItem value={String(item.item.area)}>
+            <AccordionItem value={String(item.item.id)}>
               <AccordionHeader>
                 <AccordionTrigger>
                   {({ isExpanded }) => {
                     return (
                       <View className="flex-row justify-between border-b-[1px] items-center px-2">
                         <AccordionTitleText className="text-2xl py-4">
-                          Área {item.item.area}
+                          Área {item.item.neighborNumber}
                         </AccordionTitleText>
                         <View className="flex-row justify-center items-center">
-                          <Link href={`Register/Area/${item.item.area}`}>
+                          <Link href={{
+                            pathname: 'Register/Area/[area]',
+                            params: {area: item.item.neighborNumber, neighborId: item.item.id}
+                          }}>
                             Cadastrar
                           </Link>
                           {isExpanded ? (
@@ -70,7 +105,7 @@ export default function RegisterNeighborhood() {
                     className="mt-4  border-b-[1px] border-gray-700 py-2 text-gray-600"
                     key={index}
                   >
-                    {street.name}
+                    {street.streetName}
                   </Link>
                 ))}
               </AccordionContent>
