@@ -1,5 +1,5 @@
+import type { Street } from "@/typeorm/entities";
 import { CreateStreetDTO } from "../DTOs/street-DTO";
-import { Street } from "../typeorm/entities/street";
 
 export interface StreetRepository {
     create(data: CreateStreetDTO): Promise<Street>

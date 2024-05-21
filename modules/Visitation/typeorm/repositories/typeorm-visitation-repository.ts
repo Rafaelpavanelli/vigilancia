@@ -1,8 +1,8 @@
 import { Repository } from "typeorm";
 import { VisitationRepository } from "../../repositories/visitation-repository";
-import { CreateVisitationDTO } from "../DTOs/create-visitation-DTO";
-import { Visitation } from "../entities/visitation";
+import { CreateVisitationDTO } from "../../DTOs/create-visitation-DTO";
 import { AppDataSource } from "@/ormconfig";
+import { Visitation } from "@/typeorm/entities";
 
 export class TypeormVisitationRepository implements VisitationRepository {
     private repository: Repository<Visitation>
@@ -12,13 +12,31 @@ export class TypeormVisitationRepository implements VisitationRepository {
     }
 
     async create({ houseId,status }: CreateVisitationDTO): Promise<Visitation> {
-        const house = this.repository.create({
+        const visit = this.repository.create({
             houseId,
-            status
+            status,
         })
 
-        const createdHouse = await this.repository.save(house)
+        const createdVisit = await this.repository.save(visit)
 
-        return createdHouse
+        return createdVisit
+    }
+
+    async findById(id: string): Promise<Visitation | null> {
+        const visit = await this.repository.findOne({
+            where: {
+                id,
+            },
+            relations: {
+                controlMeasures: true,
+                containers: true
+            }
+        })
+
+        if(!visit) {
+            return null
+        }
+
+        return visit
     }
 }

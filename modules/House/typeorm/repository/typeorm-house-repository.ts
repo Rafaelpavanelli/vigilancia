@@ -1,8 +1,8 @@
 import { Repository } from "typeorm";
 import { CreateHouseDTO } from "../../DTOs/create-house-DTO";
 import { HouseRepository } from "../../repositories/house-repository";
-import { House } from "../entities/house";
 import { AppDataSource } from "@/ormconfig";
+import { House } from "@/typeorm/entities";
 
 export class TypeormHouseRepository implements HouseRepository {
 
