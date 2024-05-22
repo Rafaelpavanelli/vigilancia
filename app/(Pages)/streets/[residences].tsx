@@ -1,39 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, ToastAndroid, View } from "react-native";
-import { router, useLocalSearchParams, useRouter } from "expo-router";
-import { data } from "@/utils/FakeData";
+import {  useLocalSearchParams, useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { GetHouseByStreetIdUseCase } from "@/modules/House/use-cases/get-houses-by-street-id-use-case";
-
-interface NumberData {
-  id: number;
-  numero: number;
-}
+import { makeGetHousesByStreetIdUseCase } from "@/modules/House/factories/make-get-houses-by-street-id-use-case";
+import { House } from "@/typeorm/entities";
 
 export default function Residences() {
-  const [houseNumbers, setHouseNumbers] = useState([]);
+  const [houseNumbers, setHouseNumbers] = useState<House[]>([]);
   const { residences } = useLocalSearchParams();
   const navigation = useRouter();
+
   async function GetHouses() {
     try {
-      const getHouseUseCase = null; // função
+    
+      const getHousesByStreetIdUseCase = makeGetHousesByStreetIdUseCase();
+
+      const { houses } = await getHousesByStreetIdUseCase.execute(residences as string)
+
+      setHouseNumbers(houses)
     } catch (error) {
+      console.error(error)
       ToastAndroid.show("Erro ao buscar casas", ToastAndroid.SHORT);
     }
   }
+  
+  useEffect(() => {
+    GetHouses();
+  }, [residences]);
+
   return (
     <View className="relative py-20 px-10 h-full pb-5 ">
       <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex-row flex-wrap gap-4 w-full">
           {houseNumbers ? (
-            houseNumbers.map((value, index) => (
+            houseNumbers.map((house, index) => (
               <View
                 className="w-28 h-28 border-2 border-black rounded-md justify-center items-center"
                 key={index}
               >
                 <AntDesign name="home" size={34} color="black" />
                 <Text className="text-xl" key={index}>
-                  {value}
+                  {house.houseNumber}
                 </Text>
               </View>
             ))
