@@ -1,4 +1,4 @@
-import { Button, Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text,  View,ToastAndroid } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -24,15 +24,16 @@ export default function RegisterStreet() {
   const { area, neighborId } = useLocalSearchParams();
 
   async function handleStreet({ streetName }: StreetType) {
-    
-    const createStreetUseCase = makeCreateStreetUseCase()
-
-    const { street } = await createStreetUseCase.execute({
-      name: streetName,
-      neighborId: neighborId as string
-    })
-
-    router.navigate(`Register/Street/${street.id}`);
+    try{
+      const createStreetUseCase = makeCreateStreetUseCase()
+      const { street } = await createStreetUseCase.execute({
+        name: streetName,
+        neighborId: neighborId as string
+      })
+      router.navigate(`Register/Street/${street.id}`);
+    }catch(error){
+      ToastAndroid.show("Erro ao realizar cadastro!",ToastAndroid.SHORT)
+    }
   }
 
   return (
