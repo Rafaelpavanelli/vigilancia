@@ -1,9 +1,12 @@
-import { useLocalSearchParams } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { Pressable, Text, ToastAndroid, View } from "react-native";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InputForm } from "@/components/InputForm";
+import { CreateHouseUseCase } from "@/modules/House/use-cases/create-house-use-case";
+import { makeCreateHouseUseCase } from "@/modules/House/factories/make-create-house-use-case";
+import { useState } from "react";
 type NumberType = {
   number: string;
 };
@@ -12,6 +15,8 @@ const schemaArea = yup.object({
 });
 
 export default function RegisterHome() {
+  const[loading,setLoading] = useState(false);
+  const navigation = useRouter()
   const { street } = useLocalSearchParams();
   const {
     control,
@@ -20,7 +25,33 @@ export default function RegisterHome() {
   } = useForm({
     resolver: yupResolver(schemaArea),
   });
-
+  async function CreateHouseAndEnd({number}:NumberType){
+    try{
+      const createHouseUseCase = makeCreateHouseUseCase();
+      await createHouseUseCase.execute({
+        houseNumber:Number(number),
+        streetId: String(street),
+        addressComplement: ''
+      })
+      navigation.push(`/Street/${street}`)
+    }catch(error){
+      ToastAndroid.show(`erro ${error}`,ToastAndroid.SHORT);
+    }
+  }
+  async function CreateHouseAndRestart({number}:NumberType){
+    try{
+      const createHouseUseCase = makeCreateHouseUseCase();
+      await createHouseUseCase.execute({
+        houseNumber:Number(number),
+        streetId: String(street),
+        addressComplement: ''
+      })
+      navigation.push(`/Register/Street/${street}`)
+    }catch(error){
+      ToastAndroid.show(`erro ${error}`,ToastAndroid.SHORT);
+    }
+  }
+  
   return (
     <View className="flex-1 justify-center  px-20">
       <Text className="text-3xl text-center">Numero</Text>
@@ -33,13 +64,13 @@ export default function RegisterHome() {
       />
       <View className="gap-4">
         <Pressable
-          onPress={() => {}}
+          onPress={handleSubmit(CreateHouseAndEnd)}
           className="px-4  py-2 h-12 justify-center items-center bg-teal-500 rounded-md "
         >
           <Text className="text-white">Finalizar</Text>
         </Pressable>
         <Pressable
-          onPress={() => {}}
+          onPress={handleSubmit(CreateHouseAndRestart)}
           className="px-4  py-2 h-12 justify-center items-center bg-teal-700 rounded-md "
         >
           <Text className="text-white">Adicionar mais casas</Text>
