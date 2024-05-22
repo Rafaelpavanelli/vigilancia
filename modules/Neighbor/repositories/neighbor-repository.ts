@@ -1,5 +1,5 @@
+import type { Neighbor } from "@/typeorm/entities";
 import { CreateNeighborDTO } from "../DTOs/create-neighbor-DTO";
-import { Neighbor } from "../typeorm/entities/neighbor";
 
 export interface NeighborRepository {
     create(data: CreateNeighborDTO): Promise<void>

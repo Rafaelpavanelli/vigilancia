@@ -1,8 +1,8 @@
 import { Repository } from "typeorm";
 import { CreateNeighborDTO } from "../../DTOs/create-neighbor-DTO";
 import { NeighborRepository } from "../../repositories/neighbor-repository";
-import { Neighbor } from "../entities/neighbor";
 import { AppDataSource } from "@/ormconfig";
+import { Neighbor } from "@/typeorm/entities";
 
 
 export class TypeormNeighborRepository implements NeighborRepository {
