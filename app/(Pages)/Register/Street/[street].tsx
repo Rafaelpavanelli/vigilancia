@@ -4,7 +4,6 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { InputForm } from "@/components/InputForm";
-import { CreateHouseUseCase } from "@/modules/House/use-cases/create-house-use-case";
 import { makeCreateHouseUseCase } from "@/modules/House/factories/make-create-house-use-case";
 import { useState } from "react";
 type NumberType = {
@@ -33,7 +32,10 @@ export default function RegisterHome() {
         streetId: String(street),
         addressComplement: ''
       })
-      navigation.push(`/Street/${street}`)
+      navigation.push({
+        pathname: '/streets/[id]',
+        params: { id: street }
+      })
     }catch(error){
       ToastAndroid.show(`erro ${error}`,ToastAndroid.SHORT);
     }

@@ -8,6 +8,10 @@ export class GetHouseByStreetIdUseCase {
     async execute(streetId: string) {
         const houses = await this.houseRepository.getHousesByStreetId(streetId)
 
+        if(!houses) {
+            throw new Error("Nenhuma casa encontrada")
+        }
+
         return {
             houses
         }

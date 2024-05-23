@@ -12,10 +12,10 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { FlatList, Text, View,  Pressable } from "react-native";
 
 import { Link, useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import { Neighbor } from "@/modules/Neighbor/typeorm/entities/neighbor";
+import { useCallback, useState } from "react";
 import { makeGetNeighborsUseCase } from "@/modules/Neighbor/factories/make-create-get-neighbor-use-case";
 import { AppDataSource } from "@/ormconfig";
+import type { Neighbor } from "@/typeorm/entities";
 
 export default function RegisterNeighborhood() {
   const [neighbors, setNeighbors] = useState<Neighbor[] | null>(null)
@@ -104,7 +104,10 @@ export default function RegisterNeighborhood() {
               <AccordionContent className="mx-2">
                 {item.item.streets.map((street, index) => (
                   <Link
-                    href={`streets/${street.id}`}
+                    href={{
+                      pathname: 'streets/[id]',
+                      params: { id: street.id}
+                    }}
                     className="mt-4  border-b-[1px] border-gray-700 py-2 text-gray-600"
                     key={index}
                   >
