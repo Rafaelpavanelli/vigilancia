@@ -2,17 +2,18 @@ import {
   Button,
   ButtonText,
   Center,
-  Heading, Modal,
+  Heading,
+  Modal,
   ModalBackdrop,
   ModalCloseButton,
-  ModalHeader
-} from "@gluestack-ui/themed";
-import { useRef, useState } from "react";
-import AntDesign from "@expo/vector-icons/AntDesign";
+  ModalHeader,
+} from '@gluestack-ui/themed'
+import { useRef, useState } from 'react'
+import AntDesign from '@expo/vector-icons/AntDesign'
 
 export function RegisterNeighborhoodModal() {
-  const [showModal, setShowModal] = useState(false);
-  const ref = useRef(null);
+  const [showModal, setShowModal] = useState(false)
+  const ref = useRef(null)
   return (
     <Center height={300}>
       <Button onPress={() => setShowModal(true)} ref={ref}>
@@ -32,5 +33,5 @@ export function RegisterNeighborhoodModal() {
         </ModalHeader>
       </Modal>
     </Center>
-  );
+  )
 }

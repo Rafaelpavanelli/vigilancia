@@ -1,15 +1,13 @@
-import { NeighborRepository } from "../repositories/neighbor-repository";
+import { NeighborRepository } from '../repositories/neighbor-repository'
 
 export class GetNeighborsUseCase {
-    constructor(
-        private neighborsRepository: NeighborRepository
-    ){}
+  constructor(private neighborsRepository: NeighborRepository) {}
 
-    async execute() {
-        const neighbors = await this.neighborsRepository.getNeighbors()
+  async execute() {
+    const neighbors = await this.neighborsRepository.getNeighbors()
 
-        return {
-            neighbors
-        }
+    return {
+      neighbors,
     }
+  }
 }

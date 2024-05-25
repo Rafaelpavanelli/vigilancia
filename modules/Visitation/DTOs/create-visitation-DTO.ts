@@ -1,4 +1,4 @@
 export interface CreateVisitationDTO {
-    houseId: string
-    status: string
+  houseId: string
+  status: string
 }

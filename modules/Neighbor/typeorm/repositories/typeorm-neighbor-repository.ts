@@ -1,58 +1,57 @@
-import { Repository } from "typeorm";
-import { CreateNeighborDTO } from "../../DTOs/create-neighbor-DTO";
-import { NeighborRepository } from "../../repositories/neighbor-repository";
-import { AppDataSource } from "@/ormconfig";
-import { Neighbor } from "@/typeorm/entities";
-
+import { Repository } from 'typeorm'
+import { CreateNeighborDTO } from '../../DTOs/create-neighbor-DTO'
+import { NeighborRepository } from '../../repositories/neighbor-repository'
+import { AppDataSource } from '@/ormconfig'
+import { Neighbor } from '@/typeorm/entities'
 
 export class TypeormNeighborRepository implements NeighborRepository {
-    private repository: Repository<Neighbor>
+  private repository: Repository<Neighbor>
 
-    constructor() {
-        this.repository = AppDataSource.getRepository(Neighbor)
-    }
-    
-    async create(data: CreateNeighborDTO): Promise<void> {
-         const neighbor = this.repository.create(data)
+  constructor() {
+    this.repository = AppDataSource.getRepository(Neighbor)
+  }
 
-        await this.repository.save(neighbor)
-    }
+  async create(data: CreateNeighborDTO): Promise<void> {
+    const neighbor = this.repository.create(data)
 
-    async findByNeighborNumber(neighborNumber: number): Promise<Neighbor | null> {
-        const neighbor = await this.repository.findOneBy({
-            neighborNumber,
-        })   
+    await this.repository.save(neighbor)
+  }
 
-        if(!neighbor) {
-            return null
-        }
+  async findByNeighborNumber(neighborNumber: number): Promise<Neighbor | null> {
+    const neighbor = await this.repository.findOneBy({
+      neighborNumber,
+    })
 
-        return neighbor
+    if (!neighbor) {
+      return null
     }
 
-    async getNeighbors(): Promise<Neighbor[] | null> {
-        const neighbors = await this.repository.find({
-            relations: {
-                streets: true
-            }
-        })
+    return neighbor
+  }
 
-        if (!neighbors) {
-            return null
-        }
+  async getNeighbors(): Promise<Neighbor[] | null> {
+    const neighbors = await this.repository.find({
+      relations: {
+        streets: true,
+      },
+    })
 
-        return neighbors
+    if (!neighbors) {
+      return null
     }
 
-    async findById(id: string): Promise<Neighbor | null> {
-        const neighbor = await this.repository.findOneBy({
-            id,
-        })   
+    return neighbors
+  }
 
-        if(!neighbor) {
-            return null
-        }
+  async findById(id: string): Promise<Neighbor | null> {
+    const neighbor = await this.repository.findOneBy({
+      id,
+    })
 
-        return neighbor
+    if (!neighbor) {
+      return null
     }
+
+    return neighbor
+  }
 }

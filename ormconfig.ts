@@ -1,7 +1,13 @@
-import {  DataSource } from 'typeorm';
-import * as SQLite from 'expo-sqlite/legacy';
-import { Neighbor, Street, House, Visitation, VisitControlMeasure, VisitContainer } from './typeorm/entities';
-
+import { DataSource } from 'typeorm'
+import * as SQLite from 'expo-sqlite/legacy'
+import {
+  Neighbor,
+  Street,
+  House,
+  Visitation,
+  VisitControlMeasure,
+  VisitContainer,
+} from './typeorm/entities'
 
 export const AppDataSource = new DataSource({
   database: 'dev',

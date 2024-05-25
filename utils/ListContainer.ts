@@ -1,204 +1,206 @@
 type ListContainerType = {
-  id: number;
-  container: string;
-};
+  id: number
+  container: string
+}
 type CategoryContainerType = {
-  category: string;
-  container: ListContainerType[];
-};
+  category: string
+  container: ListContainerType[]
+}
 
 export const ListContainer: CategoryContainerType[] = [
   {
-    category: "DEPOSITO ELEVADO",
+    category: 'DEPOSITO ELEVADO',
     container: [
       {
         id: 1,
-        container: "Ligado a rede",
+        container: 'Ligado a rede',
       },
       {
         id: 2,
-        container: "Não ligado a rede",
+        container: 'Não ligado a rede',
       },
     ],
   },
   {
-    category: "DEPOSITO NÃO ELEVADO",
+    category: 'DEPOSITO NÃO ELEVADO',
     container: [
       {
         id: 3,
-        container: "Ligado a rede",
+        container: 'Ligado a rede',
       },
       {
         id: 4,
-        container: "Não ligado a rede",
+        container: 'Não ligado a rede',
       },
     ],
   },
   {
-    category: "MÓVEIS",
+    category: 'MÓVEIS',
     container: [
       {
         id: 5,
-        container: "Vasos de planta na água",
+        container: 'Vasos de planta na água',
       },
       {
         id: 6,
-        container: "Vasos de planta",
+        container: 'Vasos de planta',
       },
       {
         id: 7,
-        container: "Prato/Pingadeira",
+        container: 'Prato/Pingadeira',
       },
       {
         id: 8,
-        container: "Consumo animal",
+        container: 'Consumo animal',
       },
       {
         id: 9,
-        container: "Deposito para construção",
+        container: 'Deposito para construção',
       },
       {
         id: 10,
-        container: "Depósito de horticultura",
+        container: 'Depósito de horticultura',
       },
       {
         id: 11,
-        container: "Piscina desmontavel",
+        container: 'Piscina desmontavel',
       },
       {
         id: 12,
-        container: "Lata, frascos, plastico utilizável",
+        container: 'Lata, frascos, plastico utilizável',
       },
       {
         id: 13,
-        container: "Garrafas retornáveis",
+        container: 'Garrafas retornáveis',
       },
       {
         id: 14,
-        container: "Balde/regador",
+        container: 'Balde/regador',
       },
       {
         id: 15,
-        container: "Bandeja geladeira/Ar condicionado",
+        container: 'Bandeja geladeira/Ar condicionado',
       },
       {
         id: 16,
-        container: "Material de construção",
+        container: 'Material de construção',
       },
       {
         id: 17,
-        container: "Outros",
+        container: 'Outros',
       },
     ],
   },
   {
-    category: "LIXOS",
+    category: 'LIXOS',
     container: [
       {
         id: 18,
-        container: "Ralo interno",
+        container: 'Ralo interno',
       },
       {
         id: 19,
-        container: "Ralo externo",
+        container: 'Ralo externo',
       },
       {
         id: 20,
-        container: "Laje",
+        container: 'Laje',
       },
       {
         id: 21,
-        container: "Calha",
+        container: 'Calha',
       },
       {
         id: 22,
-        container: "Vaso sanitário/Cx de descarga",
+        container: 'Vaso sanitário/Cx de descarga',
       },
       {
         id: 23,
-        container: "Piscina",
+        container: 'Piscina',
       },
       {
         id: 24,
-        container: "Depósito p/ construção",
+        container: 'Depósito p/ construção',
       },
       {
         id: 25,
-        container: "Depósito para Horticultura",
+        container: 'Depósito para Horticultura',
       },
       {
         id: 26,
-        container: "Consumo animal",
+        container: 'Consumo animal',
       },
       {
         id: 27,
-        container: "Outros",
+        container: 'Outros',
       },
     ],
   },
   {
-    category: "PNEUS",
+    category: 'PNEUS',
     container: [
       {
         id: 28,
-        container: "Pneu",
+        container: 'Pneu',
       },
       {
         id: 29,
-        container: "Outros correlatos",
+        container: 'Outros correlatos',
       },
     ],
-  }, {
-    category: "Passivel remoção/Interação",
+  },
+  {
+    category: 'Passivel remoção/Interação',
     container: [
       {
         id: 30,
-        container: "Latas, frascos, Plástico",
+        container: 'Latas, frascos, Plástico',
       },
       {
         id: 31,
-        container: 'Garrafa descartável'
+        container: 'Garrafa descartável',
       },
       {
         id: 32,
-        container: 'Lona, encerado, plástico'
+        container: 'Lona, encerado, plástico',
       },
       {
         id: 33,
-        container: 'Entulho de construção'
+        container: 'Entulho de construção',
       },
       {
         id: 34,
-        container: 'Peças e sucatas'
+        container: 'Peças e sucatas',
       },
       {
         id: 35,
-        container: 'Masseira'
+        container: 'Masseira',
       },
       {
         id: 36,
-        container: 'Banco'
+        container: 'Banco',
       },
       {
         id: 37,
-        container: 'Outros'
-      }
+        container: 'Outros',
+      },
     ],
-  }, {
-    category: "Naturais",
+  },
+  {
+    category: 'Naturais',
     container: [
       {
         id: 38,
-        container: "Oco de Árvores e Banbus",
+        container: 'Oco de Árvores e Banbus',
       },
       {
         id: 39,
-        container: 'Bromélias'
+        container: 'Bromélias',
       },
       {
         id: 40,
-        container: 'Outros'
-      }
+        container: 'Outros',
+      },
     ],
   },
-];
+]

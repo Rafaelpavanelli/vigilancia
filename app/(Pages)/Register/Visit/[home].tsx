@@ -1,25 +1,48 @@
-import { Pressable, Text, View, FlatList, StyleSheet, Button } from "react-native";
-import { ALLOWED_STATUSES } from "@/utils/allowed-visitation-statuses";
-import { SelectInput } from "@/components/SelectInput";
-import { useState } from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm, useFieldArray } from "react-hook-form";
-import * as yup from "yup";
-import { InputForm } from "@/components/InputForm";
-import { useLocalSearchParams } from "expo-router";
-import { SelectInputContainerList } from "@/components/SelectInputTypeContainer";
-import { Switch } from "@gluestack-ui/themed";
+import {
+  Icon,
+  Select,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectIcon,
+  SelectInput,
+  SelectItem,
+  SelectPortal,
+  SelectTrigger,
+} from '@gluestack-ui/themed'
+import { Text, View } from 'react-native'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { ALLOWED_STATUSES } from '@/utils/allowed-visitation-statuses'
+import {
+  Pressable,
+  Text,
+  View,
+  FlatList,
+  StyleSheet,
+  Button,
+} from 'react-native'
+import { ALLOWED_STATUSES } from '@/utils/allowed-visitation-statuses'
+import { SelectInput } from '@/components/SelectInput'
+import { useState } from 'react'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, useForm, useFieldArray } from 'react-hook-form'
+import * as yup from 'yup'
+import { InputForm } from '@/components/InputForm'
+import { useLocalSearchParams } from 'expo-router'
+import { SelectInputContainerList } from '@/components/SelectInputTypeContainer'
+import { Switch } from '@gluestack-ui/themed'
 
 const schemaArea = yup.object({
   containers: yup
     .array()
     .of(
       yup.object({
-        containerType: yup.string().required("Selecione um tipo de recipiente"),
+        containerType: yup.string().required('Selecione um tipo de recipiente'),
         quantity: yup
           .number()
-          .required("Precisa ter um valor")
-          .min(1, "Valor precisa ser maior que 0")
+          .required('Precisa ter um valor')
+          .min(1, 'Valor precisa ser maior que 0')
           .positive()
           .integer(),
         withWater: yup.boolean(),
@@ -27,22 +50,22 @@ const schemaArea = yup.object({
       })
     )
     .required(),
-});
+})
 
 type ContainerFormData = {
-  containerType: string;
-  quantity: number;
-  withWater: boolean;
-  withLarve: boolean;
-};
+  containerType: string
+  quantity: number
+  withWater: boolean
+  withLarve: boolean
+}
 
 type FormData = {
-  containers: ContainerFormData[];
-};
+  containers: ContainerFormData[]
+}
 
 export default function Visit() {
-  const [visitStatus, setVisitStatus] = useState("fechado");
-  const { home } = useLocalSearchParams();
+  const [visitStatus, setVisitStatus] = useState('fechado')
+  const { home } = useLocalSearchParams()
   const {
     control,
     handleSubmit,
@@ -52,22 +75,22 @@ export default function Visit() {
     resolver: yupResolver(schemaArea),
     defaultValues: {
       containers: [
-        { containerType: "", quantity: 0, withWater: false, withLarve: false },
+        { containerType: '', quantity: 0, withWater: false, withLarve: false },
       ],
     },
-  });
+  })
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "containers",
-  });
+    name: 'containers',
+  })
 
   function handleLogin(log: string) {
-    setVisitStatus(String(log));
+    setVisitStatus(String(log))
   }
 
   function saveVisit(data: FormData) {
-    console.log(data);
+    console.log(data)
   }
 
   return (
@@ -78,7 +101,7 @@ export default function Visit() {
         items={ALLOWED_STATUSES}
         onSelect={handleLogin}
       />
-      {visitStatus === "trabalhado" && (
+      {visitStatus === 'trabalhado' && (
         <View style={styles.formContainer}>
           <FlatList
             data={fields}
@@ -127,20 +150,23 @@ export default function Visit() {
             title="Adicionar item"
             onPress={() =>
               append({
-                containerType: "",
+                containerType: '',
                 quantity: 0,
                 withWater: false,
                 withLarve: false,
               })
             }
           />
-          <Pressable onPress={handleSubmit(saveVisit)} style={styles.saveButton}>
+          <Pressable
+            onPress={handleSubmit(saveVisit)}
+            style={styles.saveButton}
+          >
             <Text className="text-white text-xl">Salvar Visita</Text>
           </Pressable>
         </View>
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -170,4 +196,4 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
   },
-});
+})

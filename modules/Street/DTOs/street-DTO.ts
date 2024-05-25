@@ -1,4 +1,4 @@
 export interface CreateStreetDTO {
-    name: string
-    neighborId: string
+  name: string
+  neighborId: string
 }
