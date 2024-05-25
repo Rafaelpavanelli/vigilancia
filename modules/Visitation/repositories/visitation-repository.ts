@@ -4,4 +4,5 @@ import { CreateVisitationDTO } from '../DTOs/create-visitation-DTO'
 export interface VisitationRepository {
   create(data: CreateVisitationDTO): Promise<Visitation>
   findById(id: string): Promise<Visitation | null>
+  findByHouseId(houseId: string): Promise<Visitation[] | null>
 }

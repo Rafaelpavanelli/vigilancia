@@ -4,12 +4,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import { makeGetHousesByStreetIdUseCase } from '@/modules/House/factories/make-get-houses-by-street-id-use-case'
 import { House } from '@/typeorm/entities'
-import React, { useEffect, useState } from 'react'
-import { Pressable, ScrollView, Text, ToastAndroid, View } from 'react-native'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import AntDesign from '@expo/vector-icons/AntDesign'
-import { makeGetHousesByStreetIdUseCase } from '@/modules/House/factories/make-get-houses-by-street-id-use-case'
-import { House } from '@/typeorm/entities'
 
 export default function Residences() {
   const [houseNumbers, setHouseNumbers] = useState<House[]>([])
@@ -19,19 +13,13 @@ export default function Residences() {
   async function GetHouses() {
     try {
       const getHousesByStreetIdUseCase = makeGetHousesByStreetIdUseCase()
-      const getHousesByStreetIdUseCase = makeGetHousesByStreetIdUseCase()
 
-      const { houses } = await getHousesByStreetIdUseCase.execute(
-        residences as string
-      )
       const { houses } = await getHousesByStreetIdUseCase.execute(
         residences as string
       )
 
       setHouseNumbers(houses)
     } catch (error) {
-      console.error(error)
-      ToastAndroid.show('Erro ao buscar casas', ToastAndroid.SHORT)
       console.error(error)
       ToastAndroid.show('Erro ao buscar casas', ToastAndroid.SHORT)
     }

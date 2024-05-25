@@ -7,7 +7,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  PrimaryGeneratedColumn,
 } from 'typeorm'
 import uuid from 'react-native-uuid'
 
@@ -139,7 +138,7 @@ export class Visitation {
 
 @Entity('visit_containers')
 export class VisitContainer {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id!: string
 
   @Column()
@@ -148,11 +147,11 @@ export class VisitContainer {
   @Column()
   quantity!: number
 
-  @Column()
-  withWater?: number
+  @Column({ default: 0 })
+  withWater!: number
 
-  @Column()
-  withLarvae?: number
+  @Column({ default: 0 })
+  withLarvae!: number
 
   @ManyToOne(() => Visitation, (visitation) => visitation.containers)
   @JoinColumn({ name: 'visitation_id', referencedColumnName: 'id' })
@@ -170,7 +169,7 @@ export class VisitContainer {
 
 @Entity('visit_control_measures')
 export class VisitControlMeasure {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id!: string
 
   @Column()

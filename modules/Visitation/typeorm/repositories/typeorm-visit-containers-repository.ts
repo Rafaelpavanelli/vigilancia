@@ -26,4 +26,10 @@ export class TypeormVisitContainersRepository
 
     return createdContainer
   }
+
+  async getAll() {
+    const containers = await this.repository.find()
+
+    return containers
+  }
 }
