@@ -1,22 +1,22 @@
-import { Controller, UseFormProps } from "react-hook-form";
-import { Text, TextInput, View } from "react-native";
+import { Controller, UseFormProps } from 'react-hook-form'
+import { Text, TextInput, View } from 'react-native'
 
 type Props = {
-  name: string;
-  control: any;
-  errorMessage?: string;
-  title: string;
-  isLabel?: boolean;
-  keyboardType?: "numeric" | "default";
-};
+  name: string
+  control: any
+  errorMessage?: string
+  title: string
+  isLabel?: boolean
+  keyboardType?: 'numeric' | 'default'
+}
 
 export function InputForm({
   control,
-  errorMessage = "",
+  errorMessage = '',
   name,
   title,
   isLabel,
-  keyboardType = "default",
+  keyboardType = 'default',
 }: Props) {
   return (
     <Controller
@@ -27,10 +27,10 @@ export function InputForm({
           {isLabel && (
             <Text
               style={{
-                textAlign: "left",
+                textAlign: 'left',
                 paddingHorizontal: 4,
                 paddingVertical: 4,
-                color: "#121215",
+                color: '#121215',
               }}
             >
               {title}
@@ -40,18 +40,18 @@ export function InputForm({
             style={{
               borderWidth: 1,
               padding: 4,
-              width: "auto",
+              width: 'auto',
               borderRadius: 4,
-              borderColor: errorMessage ? "red" : "black",
+              borderColor: errorMessage ? 'red' : 'black',
               minWidth: 200,
             }}
             onChangeText={onChange}
             placeholder={title}
             keyboardType={keyboardType}
           />
-          <Text style={{ color: "red" }}>{errorMessage}</Text>
+          <Text style={{ color: 'red' }}>{errorMessage}</Text>
         </View>
       )}
     />
-  );
+  )
 }

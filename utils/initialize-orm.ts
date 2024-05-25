@@ -1,11 +1,11 @@
-import { AppDataSource } from "@/ormconfig";
+import { AppDataSource } from '@/ormconfig'
 
 export async function initializeOrm() {
-    const database = AppDataSource;
+  const database = AppDataSource
 
-    if (!database.isInitialized) {
-        await database.initialize();
-    }
+  if (!database.isInitialized) {
+    await database.initialize()
+  }
 
-    return database;
+  return database
 }

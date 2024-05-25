@@ -1,3 +1,3 @@
 export interface CreateNeighborDTO {
-    neighborNumber: number
+  neighborNumber: number
 }

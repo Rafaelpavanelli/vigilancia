@@ -1,7 +1,7 @@
 export interface VisitContainerDTO {
-    containerType: string
-    quantity: number
-    withWater?: number
-    withLarvae?: number
-    visitationId: string
+  containerType: string
+  quantity: number
+  withWater?: number
+  withLarvae?: number
+  visitationId: string
 }

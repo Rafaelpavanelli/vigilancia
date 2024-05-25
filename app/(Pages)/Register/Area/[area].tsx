@@ -1,18 +1,18 @@
-import { Button, Pressable, Text, TextInput, View } from "react-native";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { Button, Pressable, Text, TextInput, View } from 'react-native'
+import { Link, router, useLocalSearchParams } from 'expo-router'
 
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { InputForm } from "@/components/InputForm";
-import { makeCreateStreetUseCase } from "@/modules/Street/factories/make-create-street-use-case";
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import { InputForm } from '@/components/InputForm'
+import { makeCreateStreetUseCase } from '@/modules/Street/factories/make-create-street-use-case'
 
 type StreetType = {
-  streetName: string;
-};
+  streetName: string
+}
 const schemaArea = yup.object({
-  streetName: yup.string().required("Campo obrigatório"),
-});
+  streetName: yup.string().required('Campo obrigatório'),
+})
 export default function RegisterStreet() {
   const {
     control,
@@ -20,19 +20,18 @@ export default function RegisterStreet() {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schemaArea),
-  });
-  const { area, neighborId } = useLocalSearchParams();
+  })
+  const { area, neighborId } = useLocalSearchParams()
 
   async function handleStreet({ streetName }: StreetType) {
-    
     const createStreetUseCase = makeCreateStreetUseCase()
 
     const { street } = await createStreetUseCase.execute({
       name: streetName,
-      neighborId: neighborId as string
+      neighborId: neighborId as string,
     })
 
-    router.navigate(`Register/Street/${street.id}`);
+    router.navigate(`Register/Street/${street.id}`)
   }
 
   return (
@@ -46,7 +45,7 @@ export default function RegisterStreet() {
         name="streetName"
       />
       <View className="flex-row gap-4 justify-between mt-10">
-        <Link asChild href={"/"}>
+        <Link asChild href={'/'}>
           <Pressable className="px-4 py-2 h-12 justify-center items-center bg-red-500 rounded-md ">
             <Text className="text-white w-full">Cancelar</Text>
           </Pressable>
@@ -60,5 +59,5 @@ export default function RegisterStreet() {
         </Pressable>
       </View>
     </View>
-  );
+  )
 }

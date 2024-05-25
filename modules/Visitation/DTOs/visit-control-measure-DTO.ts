@@ -1,4 +1,4 @@
 export interface VisitControlMeasureDTO {
-    controlMeasureType: string
-    visitationId: string 
+  controlMeasureType: string
+  visitationId: string
 }

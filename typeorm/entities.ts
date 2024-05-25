@@ -1,35 +1,45 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import uuid from 'react-native-uuid'
 
 @Entity('houses')
 export class House {
   @PrimaryColumn()
-  id!: string;
+  id!: string
 
   @Column({ name: 'house_number' })
-  houseNumber!: number;
+  houseNumber!: number
 
   @Column({ name: 'address_complement' })
-  addressComplement!: string;
+  addressComplement!: string
 
-  @ManyToOne(() => Street, street => street.houses)
-  @JoinColumn({name: 'street_id', referencedColumnName: 'id'})
-  street!: Street;
+  @ManyToOne(() => Street, (street) => street.houses)
+  @JoinColumn({ name: 'street_id', referencedColumnName: 'id' })
+  street!: Street
 
   @Column({ name: 'street_id' })
-  streetId!: string;
+  streetId!: string
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt!: Date
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt!: Date
 
-  @OneToMany(() => Visitation, visitation => visitation.house)
-  visits!: Visitation[];
+  @OneToMany(() => Visitation, (visitation) => visitation.house)
+  visits!: Visitation[]
 
   constructor() {
-    if(!this.id) {
+    if (!this.id) {
       this.id = uuid.v4() as string
     }
   }
@@ -38,22 +48,22 @@ export class House {
 @Entity('neighbors')
 export class Neighbor {
   @PrimaryColumn()
-  id!: string;
+  id!: string
 
   @Column({ name: 'neighbor_number' })
-  neighborNumber!: number;
+  neighborNumber!: number
 
   @OneToMany(() => Street, (street) => street.neighbor)
-  streets!: Street[];
+  streets!: Street[]
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt!: Date
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt!: Date
 
   constructor() {
-    if(!this.id) {
+    if (!this.id) {
       this.id = uuid.v4() as string
     }
   }
@@ -62,29 +72,29 @@ export class Neighbor {
 @Entity('streets')
 export class Street {
   @PrimaryColumn()
-  id!: string;
+  id!: string
 
   @Column({ name: 'street_name' })
-  streetName!: string;
+  streetName!: string
 
-  @OneToMany(() => House, house => house.street)
-  houses!: House[];
+  @OneToMany(() => House, (house) => house.street)
+  houses!: House[]
 
   @ManyToOne(() => Neighbor, (neighbor) => neighbor.streets)
-  @JoinColumn({name: 'neighbor_id', referencedColumnName: 'id'})
-  neighbor!: Neighbor;
+  @JoinColumn({ name: 'neighbor_id', referencedColumnName: 'id' })
+  neighbor!: Neighbor
 
   @Column({ name: 'neighbor_id' })
-  neighborId!: string;
+  neighborId!: string
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt!: Date
 
   @UpdateDateColumn()
-  updatedAt!: Date;
+  updatedAt!: Date
 
   constructor() {
-    if(!this.id) {
+    if (!this.id) {
       this.id = uuid.v4() as string
     }
   }
@@ -93,29 +103,35 @@ export class Street {
 @Entity('visitations')
 export class Visitation {
   @PrimaryColumn()
-  id!: string;
+  id!: string
 
   @CreateDateColumn()
-  createdAt!: Date;
+  createdAt!: Date
 
-  @ManyToOne(() => House, house => house.visits)
-  @JoinColumn({name: 'house_id',  referencedColumnName: 'id'})
-  house!: House;
+  @ManyToOne(() => House, (house) => house.visits)
+  @JoinColumn({ name: 'house_id', referencedColumnName: 'id' })
+  house!: House
 
   @Column({ name: 'house_id' })
-  houseId!: string;
+  houseId!: string
 
   @Column()
-  status!: string;
+  status!: string
 
-  @OneToMany(() => VisitControlMeasure, visitControlMeasure => visitControlMeasure.visitation)
-  controlMeasures!: VisitControlMeasure[];
+  @OneToMany(
+    () => VisitControlMeasure,
+    (visitControlMeasure) => visitControlMeasure.visitation
+  )
+  controlMeasures!: VisitControlMeasure[]
 
-  @OneToMany(() => VisitContainer, visitContainer => visitContainer.visitation)
-  containers!: VisitContainer[];
+  @OneToMany(
+    () => VisitContainer,
+    (visitContainer) => visitContainer.visitation
+  )
+  containers!: VisitContainer[]
 
   constructor() {
-    if(!this.id) {
+    if (!this.id) {
       this.id = uuid.v4() as string
     }
   }
@@ -124,29 +140,29 @@ export class Visitation {
 @Entity('visit_containers')
 export class VisitContainer {
   @PrimaryGeneratedColumn()
-  id!: string;
+  id!: string
 
   @Column()
-  containerType!: string;
+  containerType!: string
 
   @Column()
   quantity!: number
 
   @Column()
-  withWater?: number;
+  withWater?: number
 
   @Column()
-  withLarvae?: number;
+  withLarvae?: number
 
-  @ManyToOne(() => Visitation, visitation => visitation.containers)
-  @JoinColumn({name: 'visitation_id', referencedColumnName: 'id'})
-  visitation!: Visitation;
+  @ManyToOne(() => Visitation, (visitation) => visitation.containers)
+  @JoinColumn({ name: 'visitation_id', referencedColumnName: 'id' })
+  visitation!: Visitation
 
   @Column({ name: 'visitation_id' })
-  visitationId!: string;
+  visitationId!: string
 
   constructor() {
-    if(!this.id) {
+    if (!this.id) {
       this.id = uuid.v4() as string
     }
   }
@@ -155,20 +171,20 @@ export class VisitContainer {
 @Entity('visit_control_measures')
 export class VisitControlMeasure {
   @PrimaryGeneratedColumn()
-  id!: string;
+  id!: string
 
   @Column()
-  controlMeasure!: string;
+  controlMeasure!: string
 
-  @ManyToOne(() => Visitation, visitation => visitation.controlMeasures)
-  @JoinColumn({name: 'visitation_id', referencedColumnName: 'id'})
-  visitation!: Visitation;
+  @ManyToOne(() => Visitation, (visitation) => visitation.controlMeasures)
+  @JoinColumn({ name: 'visitation_id', referencedColumnName: 'id' })
+  visitation!: Visitation
 
   @Column({ name: 'visitation_id' })
-  visitationId!: string;
+  visitationId!: string
 
   constructor() {
-    if(!this.id) {
+    if (!this.id) {
       this.id = uuid.v4() as string
     }
   }

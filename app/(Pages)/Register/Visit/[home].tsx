@@ -10,10 +10,10 @@ import {
   SelectItem,
   SelectPortal,
   SelectTrigger,
-} from "@gluestack-ui/themed";
-import { Text, View } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { ALLOWED_STATUSES } from "@/utils/allowed-visitation-statuses";
+} from '@gluestack-ui/themed'
+import { Text, View } from 'react-native'
+import MaterialIcons from '@expo/vector-icons/MaterialIcons'
+import { ALLOWED_STATUSES } from '@/utils/allowed-visitation-statuses'
 
 export default function Visit() {
   return (
@@ -47,5 +47,5 @@ export default function Visit() {
         </SelectPortal>
       </Select>
     </View>
-  );
+  )
 }

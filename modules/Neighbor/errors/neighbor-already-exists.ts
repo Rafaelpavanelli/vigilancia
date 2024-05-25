@@ -1,5 +1,5 @@
 export class AlreadyExistsNeighbor extends Error {
-    constructor() {
-        super('Bairro já cadastrado')
-    }
+  constructor() {
+    super('Bairro já cadastrado')
+  }
 }

@@ -1,5 +1,5 @@
 export interface CreateHouseDTO {
-    houseNumber: number
-    addressComplement?: string
-    streetId: string
+  houseNumber: number
+  addressComplement?: string
+  streetId: string
 }

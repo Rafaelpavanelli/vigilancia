@@ -1,59 +1,59 @@
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import { Pressable, Text, ToastAndroid, View } from "react-native";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { InputForm } from "@/components/InputForm";
-import { makeCreateHouseUseCase } from "@/modules/House/factories/make-create-house-use-case";
-import { useState } from "react";
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
+import { Pressable, Text, ToastAndroid, View } from 'react-native'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useForm } from 'react-hook-form'
+import { InputForm } from '@/components/InputForm'
+import { makeCreateHouseUseCase } from '@/modules/House/factories/make-create-house-use-case'
+import { useState } from 'react'
 type NumberType = {
-  number: string;
-};
+  number: string
+}
 const schemaArea = yup.object({
-  number: yup.string().required("Campo obrigatório"),
-});
+  number: yup.string().required('Campo obrigatório'),
+})
 
 export default function RegisterHome() {
-  const[loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const navigation = useRouter()
-  const { street } = useLocalSearchParams();
+  const { street } = useLocalSearchParams()
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schemaArea),
-  });
-  async function CreateHouseAndEnd({number}:NumberType){
-    try{
-      const createHouseUseCase = makeCreateHouseUseCase();
+  })
+  async function CreateHouseAndEnd({ number }: NumberType) {
+    try {
+      const createHouseUseCase = makeCreateHouseUseCase()
       await createHouseUseCase.execute({
-        houseNumber:Number(number),
+        houseNumber: Number(number),
         streetId: String(street),
-        addressComplement: ''
+        addressComplement: '',
       })
       navigation.push({
         pathname: '/streets/[id]',
-        params: { id: street }
+        params: { id: street },
       })
-    }catch(error){
-      ToastAndroid.show(`erro ${error}`,ToastAndroid.SHORT);
+    } catch (error) {
+      ToastAndroid.show(`erro ${error}`, ToastAndroid.SHORT)
     }
   }
-  async function CreateHouseAndRestart({number}:NumberType){
-    try{
-      const createHouseUseCase = makeCreateHouseUseCase();
+  async function CreateHouseAndRestart({ number }: NumberType) {
+    try {
+      const createHouseUseCase = makeCreateHouseUseCase()
       await createHouseUseCase.execute({
-        houseNumber:Number(number),
+        houseNumber: Number(number),
         streetId: String(street),
-        addressComplement: ''
+        addressComplement: '',
       })
       navigation.push(`/Register/Street/${street}`)
-    }catch(error){
-      ToastAndroid.show(`erro ${error}`,ToastAndroid.SHORT);
+    } catch (error) {
+      ToastAndroid.show(`erro ${error}`, ToastAndroid.SHORT)
     }
   }
-  
+
   return (
     <View className="flex-1 justify-center  px-20">
       <Text className="text-3xl text-center">Numero</Text>
@@ -79,5 +79,5 @@ export default function RegisterHome() {
         </Pressable>
       </View>
     </View>
-  );
+  )
 }

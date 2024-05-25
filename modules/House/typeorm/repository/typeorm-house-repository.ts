@@ -1,61 +1,59 @@
-import { Repository } from "typeorm";
-import { CreateHouseDTO } from "../../DTOs/create-house-DTO";
-import { HouseRepository } from "../../repositories/house-repository";
-import { AppDataSource } from "@/ormconfig";
-import { House } from "@/typeorm/entities";
+import { Repository } from 'typeorm'
+import { CreateHouseDTO } from '../../DTOs/create-house-DTO'
+import { HouseRepository } from '../../repositories/house-repository'
+import { AppDataSource } from '@/ormconfig'
+import { House } from '@/typeorm/entities'
 
 export class TypeormHouseRepository implements HouseRepository {
+  private repository: Repository<House>
 
-    private repository: Repository<House>
+  constructor() {
+    this.repository = AppDataSource.getRepository(House)
+  }
 
-    constructor() {
-        this.repository = AppDataSource.getRepository(House)
+  async create(data: CreateHouseDTO): Promise<House> {
+    const house = this.repository.create({
+      houseNumber: data.houseNumber,
+      streetId: data.streetId,
+      addressComplement: data.addressComplement,
+    })
+
+    const createdHouse = await this.repository.save(house)
+
+    return createdHouse
+  }
+
+  async findById(id: string): Promise<House | null> {
+    const house = await this.repository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        visits: true,
+      },
+    })
+
+    if (!house) {
+      return null
     }
 
-    async create(data: CreateHouseDTO): Promise<House> {
-        const house = this.repository.create({
-            houseNumber: data.houseNumber,
-            streetId: data.streetId,
-            addressComplement: data.addressComplement
-        })
+    return house
+  }
 
+  async getHousesByStreetId(streetId: string): Promise<House[] | null> {
+    const houses = await this.repository.find({
+      where: {
+        streetId,
+      },
+      relations: {
+        visits: true,
+      },
+    })
 
-        const createdHouse = await this.repository.save(house)
-
-        return createdHouse
+    if (!houses) {
+      return null
     }
 
-    async findById(id: string): Promise<House | null> {
-        const house = await this.repository.findOne({
-            where: {
-                id,
-            },
-            relations: {
-                visits: true
-            },
-        },)
-        
-        if(!house) {
-            return null
-        }
-
-        return house
-    }
-
-    async getHousesByStreetId(streetId: string): Promise<House[] | null> {
-        const houses = await this.repository.find({
-            where: {
-                streetId,
-            },
-            relations: {
-                visits: true
-            }
-        })
-
-        if(!houses) {
-            return null
-        }
-
-        return houses
-    }
+    return houses
+  }
 }
