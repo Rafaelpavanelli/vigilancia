@@ -39,4 +39,22 @@ export class TypeormVisitationRepository implements VisitationRepository {
 
     return visit
   }
+
+  async findByHouseId(houseId: string): Promise<Visitation[] | null> {
+    const visits = await this.repository.find({
+      where: {
+        houseId,
+      },
+      relations: {
+        controlMeasures: true,
+        containers: true,
+      },
+    })
+
+    if (!visits) {
+      return null
+    }
+
+    return visits
+  }
 }

@@ -1,20 +1,4 @@
 import {
-  Icon,
-  Select,
-  SelectBackdrop,
-  SelectContent,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
-  SelectIcon,
-  SelectInput,
-  SelectItem,
-  SelectPortal,
-  SelectTrigger,
-} from '@gluestack-ui/themed'
-import { Text, View } from 'react-native'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
-import { ALLOWED_STATUSES } from '@/utils/allowed-visitation-statuses'
-import {
   Pressable,
   Text,
   View,
@@ -24,7 +8,7 @@ import {
 } from 'react-native'
 import { ALLOWED_STATUSES } from '@/utils/allowed-visitation-statuses'
 import { SelectInput } from '@/components/SelectInput'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm, useFieldArray } from 'react-hook-form'
 import * as yup from 'yup'
@@ -32,31 +16,33 @@ import { InputForm } from '@/components/InputForm'
 import { useLocalSearchParams } from 'expo-router'
 import { SelectInputContainerList } from '@/components/SelectInputTypeContainer'
 import { Switch } from '@gluestack-ui/themed'
+import { makeCreateVisitationUseCase } from '@/modules/Visitation/factories/make-create-visitation-use-case'
+import { makeGetVisitsByHouseIdUseCase } from '@/modules/Visitation/factories/make-get-visits-by-house-id-use-case'
 
 const schemaArea = yup.object({
   containers: yup
     .array()
     .of(
       yup.object({
-        containerType: yup.string().required('Selecione um tipo de recipiente'),
+        type: yup.string().required('Selecione um tipo de recipiente'),
         quantity: yup
           .number()
           .required('Precisa ter um valor')
           .min(1, 'Valor precisa ser maior que 0')
           .positive()
           .integer(),
-        withWater: yup.boolean(),
-        withLarve: yup.boolean(),
+        withWater: yup.number(),
+        withLarve: yup.number(),
       })
     )
     .required(),
 })
 
 type ContainerFormData = {
-  containerType: string
+  type: string
   quantity: number
-  withWater: boolean
-  withLarve: boolean
+  withWater?: number
+  withLarve?: number
 }
 
 type FormData = {
@@ -74,9 +60,7 @@ export default function Visit() {
   } = useForm<FormData>({
     resolver: yupResolver(schemaArea),
     defaultValues: {
-      containers: [
-        { containerType: '', quantity: 0, withWater: false, withLarve: false },
-      ],
+      containers: [{ type: '', quantity: 0, withWater: 0, withLarve: 0 }],
     },
   })
 
@@ -85,12 +69,45 @@ export default function Visit() {
     name: 'containers',
   })
 
+  async function fetchVisits() {
+    try {
+      const useCase = makeGetVisitsByHouseIdUseCase()
+
+      const { visits } = await useCase.execute(home as string)
+
+      console.log(
+        visits.map((visit) => visit.containers.map((container) => container))
+      )
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    fetchVisits()
+  }, [])
+
   function handleLogin(log: string) {
     setVisitStatus(String(log))
   }
 
-  function saveVisit(data: FormData) {
-    console.log(data)
+  async function saveVisit(data: FormData) {
+    try {
+      const createVisitUseCase = makeCreateVisitationUseCase()
+
+      const { visitation } = await createVisitUseCase.execute({
+        houseId: home as string,
+        status: visitStatus,
+        // TODO: Fix me
+        visitControlMeasures: ['MECANICO'],
+        containers: data.containers,
+      })
+
+      console.log(visitation)
+    } catch (error) {
+      // TODO: Fix me
+      console.log('Erro ao salvar visita ', error)
+    }
   }
 
   return (
@@ -109,7 +126,7 @@ export default function Visit() {
               <View key={item.id} style={styles.itemContainer}>
                 <SelectInputContainerList
                   onSelect={(value) =>
-                    setValue(`containers[${index}].containerType`, value)
+                    setValue(`containers.${index}.type`, value)
                   }
                 />
                 <InputForm
@@ -119,25 +136,19 @@ export default function Visit() {
                   keyboardType="numeric"
                   errorMessage={errors.containers?.[index]?.quantity?.message}
                 />
-                <Controller
+                <InputForm
+                  title="Com Água"
                   name={`containers[${index}].withWater`}
                   control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <View style={styles.switchContainer}>
-                      <Text>Possui água?</Text>
-                      <Switch value={value} onToggle={onChange} />
-                    </View>
-                  )}
+                  keyboardType="numeric"
+                  errorMessage={errors.containers?.[index]?.withWater?.message}
                 />
-                <Controller
+                <InputForm
+                  title="Com Larva"
                   name={`containers[${index}].withLarve`}
                   control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <View style={styles.switchContainer}>
-                      <Text>Possui Larva?</Text>
-                      <Switch value={value} onToggle={onChange} />
-                    </View>
-                  )}
+                  keyboardType="numeric"
+                  errorMessage={errors.containers?.[index]?.withLarve?.message}
                 />
                 {fields.length > 1 && (
                   <Button title="Remover" onPress={() => remove(index)} />
@@ -150,10 +161,10 @@ export default function Visit() {
             title="Adicionar item"
             onPress={() =>
               append({
-                containerType: '',
+                type: '',
                 quantity: 0,
-                withWater: false,
-                withLarve: false,
+                withWater: 0,
+                withLarve: 0,
               })
             }
           />

@@ -4,7 +4,6 @@ import { ALLOWED_STATUSES } from '@/utils/allowed-visitation-statuses'
 import type { VisitControlMeasureRepository } from '../repositories/visit-control-measure-repository'
 import { CONTROL_MEASURE_TYPE } from '@/utils/control-measure-type'
 import type { VisitContainersRepository } from '../repositories/visit-containers-repository'
-import type { VisitContainer, VisitControlMeasure } from '@/typeorm/entities'
 
 interface Container {
   type: string
@@ -44,51 +43,48 @@ export class CreateVisitationUseCase {
       throw new Error('Status não permitido')
     }
 
+    const invalidTypes = visitControlMeasures.filter(
+      (measureType) => !CONTROL_MEASURE_TYPE.includes(measureType)
+    )
+    if (invalidTypes.length > 0) {
+      throw new Error('Tipo de controle inválido')
+    }
+
     const visitation = await this.visitationRepository.create({
       houseId: house.id,
       status,
     })
 
-    const invalidTypes = visitControlMeasures.filter(
-      (measureType) => !CONTROL_MEASURE_TYPE.includes(measureType)
-    )
-    if (invalidTypes) {
-      throw new Error('Tipo de controle inválido')
-    }
-
-    const createdVisitControlMeasures: VisitControlMeasure[] = []
-
-    for (const visitControlMeasure of visitControlMeasures) {
-      const createdVisitControlMeasure =
-        await this.visitControlMeasureRepository.create({
-          controlMeasureType: visitControlMeasure,
+    const controlMeasuresPromises = visitControlMeasures.map(
+      (controlMeasure) => {
+        this.visitControlMeasureRepository.create({
+          controlMeasureType: controlMeasure,
           visitationId: visitation.id,
         })
+      }
+    )
 
-      createdVisitControlMeasures.push(createdVisitControlMeasure)
-    }
+    const containersPromises = containers.map((container) => {
+      this.visitContainersRepository.create({
+        containerType: container.type,
+        quantity: container.quantity,
+        withLarvae: container.withLarvae,
+        withWater: container.withWater,
+        visitationId: visitation.id,
+      })
+    })
 
-    const createdVisitContainers: VisitContainer[] = []
+    const createdVisitControlMeasures = await Promise.all(
+      controlMeasuresPromises
+    )
 
-    for (const container of containers) {
-      const createdVisitContainer = await this.visitContainersRepository.create(
-        {
-          containerType: container.type,
-          quantity: container.quantity,
-          withLarvae: container.withLarvae,
-          withWater: container.withWater,
-          visitationId: visitation.id,
-        }
-      )
-
-      createdVisitContainers.push(createdVisitContainer)
-    }
+    const createdVisitContainers = await Promise.all(containersPromises)
 
     return {
       visitation: {
         ...visitation,
-        controlMeasures: [...createdVisitControlMeasures],
-        containers: [...createdVisitContainers],
+        controlMeasures: createdVisitControlMeasures,
+        containers: createdVisitContainers,
       },
     }
   }
