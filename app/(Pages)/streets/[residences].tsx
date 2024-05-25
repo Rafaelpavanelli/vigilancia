@@ -4,6 +4,12 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import { makeGetHousesByStreetIdUseCase } from '@/modules/House/factories/make-get-houses-by-street-id-use-case'
 import { House } from '@/typeorm/entities'
+import React, { useEffect, useState } from 'react'
+import { Pressable, ScrollView, Text, ToastAndroid, View } from 'react-native'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import AntDesign from '@expo/vector-icons/AntDesign'
+import { makeGetHousesByStreetIdUseCase } from '@/modules/House/factories/make-get-houses-by-street-id-use-case'
+import { House } from '@/typeorm/entities'
 
 export default function Residences() {
   const [houseNumbers, setHouseNumbers] = useState<House[]>([])
@@ -13,13 +19,19 @@ export default function Residences() {
   async function GetHouses() {
     try {
       const getHousesByStreetIdUseCase = makeGetHousesByStreetIdUseCase()
+      const getHousesByStreetIdUseCase = makeGetHousesByStreetIdUseCase()
 
+      const { houses } = await getHousesByStreetIdUseCase.execute(
+        residences as string
+      )
       const { houses } = await getHousesByStreetIdUseCase.execute(
         residences as string
       )
 
       setHouseNumbers(houses)
     } catch (error) {
+      console.error(error)
+      ToastAndroid.show('Erro ao buscar casas', ToastAndroid.SHORT)
       console.error(error)
       ToastAndroid.show('Erro ao buscar casas', ToastAndroid.SHORT)
     }
@@ -35,15 +47,22 @@ export default function Residences() {
         <View className="flex-row flex-wrap gap-4 w-full">
           {houseNumbers ? (
             houseNumbers.map((house, index) => (
-              <View
-                className="w-28 h-28 border-2 border-black rounded-md justify-center items-center"
+              <Pressable
+                onPress={() => {
+                  navigation.push(`/Register/Visit/${house.id}`)
+                }}
                 key={index}
               >
-                <AntDesign name="home" size={34} color="black" />
-                <Text className="text-xl" key={index}>
-                  {house.houseNumber}
-                </Text>
-              </View>
+                <View
+                  className="w-28 h-28 border-2 border-black rounded-md justify-center items-center"
+                  key={index}
+                >
+                  <AntDesign name="home" size={34} color="black" />
+                  <Text className="text-xl" key={index}>
+                    {house.houseNumber}
+                  </Text>
+                </View>
+              </Pressable>
             ))
           ) : (
             <Text>Nenhuma casa registrada</Text>
