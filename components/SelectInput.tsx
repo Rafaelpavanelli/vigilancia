@@ -7,7 +7,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 type InputSelectProps = {
     onSelect: (selected:string)=>void,
     items: any[],
-    title: string
+    title: string,
 }
 export  function SelectInput({onSelect,items,title}:InputSelectProps) {
   return (

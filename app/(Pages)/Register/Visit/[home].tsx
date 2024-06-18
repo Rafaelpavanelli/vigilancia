@@ -7,15 +7,15 @@ import {
   Button,
 } from 'react-native'
 import { ALLOWED_STATUSES } from '@/utils/allowed-visitation-statuses'
+import { CONTROL_MEASURE_TYPE } from '@/utils/control-measure-type'
 import { SelectInput } from '@/components/SelectInput'
 import { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Controller, useForm, useFieldArray } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import * as yup from 'yup'
 import { InputForm } from '@/components/InputForm'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { SelectInputContainerList } from '@/components/SelectInputTypeContainer'
-import { Switch } from '@gluestack-ui/themed'
 import { makeCreateVisitationUseCase } from '@/modules/Visitation/factories/make-create-visitation-use-case'
 import { makeGetVisitsByHouseIdUseCase } from '@/modules/Visitation/factories/make-get-visits-by-house-id-use-case'
 
@@ -33,6 +33,9 @@ const schemaArea = yup.object({
           .integer(),
         withWater: yup.number(),
         withLarve: yup.number(),
+        controlMeasure: yup
+          .string()
+          .required('Selecione uma medida de controle'),
       })
     )
     .required(),
@@ -43,6 +46,7 @@ type ContainerFormData = {
   quantity: number
   withWater?: number
   withLarve?: number
+  controlMeasure: string
 }
 
 type FormData = {
@@ -50,6 +54,7 @@ type FormData = {
 }
 
 export default function Visit() {
+  const navigate = useRouter()
   const [visitStatus, setVisitStatus] = useState('fechado')
   const { home } = useLocalSearchParams()
   const {
@@ -60,15 +65,13 @@ export default function Visit() {
   } = useForm<FormData>({
     resolver: yupResolver(schemaArea),
     defaultValues: {
-      containers: [{ type: '', quantity: 0, withWater: 0, withLarve: 0 }],
+      containers: [],
     },
   })
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'containers',
   })
-
   async function fetchVisits() {
     try {
       const useCase = makeGetVisitsByHouseIdUseCase()
@@ -82,7 +85,6 @@ export default function Visit() {
       console.log(e)
     }
   }
-
   useEffect(() => {
     fetchVisits()
   }, [])
@@ -94,18 +96,16 @@ export default function Visit() {
   async function saveVisit(data: FormData) {
     try {
       const createVisitUseCase = makeCreateVisitationUseCase()
-
       const { visitation } = await createVisitUseCase.execute({
         houseId: home as string,
         status: visitStatus,
-        // TODO: Fix me
-        visitControlMeasures: ['MECANICO'],
+        visitControlMeasures: data.containers.map(
+          (container) => container.controlMeasure
+        ),
         containers: data.containers,
       })
-
-      console.log(visitation)
+      navigate.back()
     } catch (error) {
-      // TODO: Fix me
       console.log('Erro ao salvar visita ', error)
     }
   }
@@ -150,30 +150,39 @@ export default function Visit() {
                   keyboardType="numeric"
                   errorMessage={errors.containers?.[index]?.withLarve?.message}
                 />
-                {fields.length > 1 && (
-                  <Button title="Remover" onPress={() => remove(index)} />
-                )}
+                <SelectInput
+                  title="Medida de Controle"
+                  items={CONTROL_MEASURE_TYPE}
+                  onSelect={(value) =>
+                    setValue(`containers.${index}.controlMeasure`, value)
+                  }
+                />
+                <Text>{errors.root?.message}</Text>
+                <Button title="Remover" onPress={() => remove(index)} />
               </View>
             )}
             keyExtractor={(item) => item.id.toString()}
           />
-          <Button
-            title="Adicionar item"
-            onPress={() =>
-              append({
-                type: '',
-                quantity: 0,
-                withWater: 0,
-                withLarve: 0,
-              })
-            }
-          />
-          <Pressable
-            onPress={handleSubmit(saveVisit)}
-            style={styles.saveButton}
-          >
-            <Text className="text-white text-xl">Salvar Visita</Text>
-          </Pressable>
+          <View style={styles.buttonsContainer}>
+            <Button
+              title="Adicionar item"
+              onPress={() =>
+                append({
+                  type: '',
+                  quantity: 0,
+                  withWater: 0,
+                  withLarve: 0,
+                  controlMeasure: '',
+                })
+              }
+            />
+            <Pressable
+              onPress={handleSubmit(saveVisit)}
+              style={styles.saveButton}
+            >
+              <Text className="text-white text-xl">Salvar Visita</Text>
+            </Pressable>
+          </View>
         </View>
       )}
     </View>
@@ -186,10 +195,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 40,
+    paddingTop: 80,
+    position: 'relative',
   },
   formContainer: {
     width: '100%',
     padding: 16,
+    paddingBottom: 90,
   },
   itemContainer: {
     marginBottom: 16,
@@ -207,4 +219,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
   },
+  buttonsContainer: {},
 })

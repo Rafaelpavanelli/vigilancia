@@ -1,9 +1,10 @@
-import { FlatList, Pressable, ScrollView, Text, View, StyleSheet } from "react-native";
+import {  Pressable, ScrollView, Text, View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { ListContainer } from "@/utils/ListContainer";
 
 type InputSelectProps = {
   onSelect: (selected: string) => void;
+  
 };
 
 type TypeContainer = {
